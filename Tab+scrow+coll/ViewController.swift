@@ -7,6 +7,7 @@
 //
 
 import UIKit
+let wid:CGFloat = 300
 
 class ViewController: UIViewController {
 
@@ -16,10 +17,11 @@ class ViewController: UIViewController {
         let ggvc = GGTableViewController()
         let tabV = ggvc.view
         view.addSubview(tabV)
-        tabV.frame = CGRect(x: 0, y: 100, width: 300, height: 300)
+        tabV.frame = CGRect(x: 0, y: 100, width: wid, height: 300)
 //        view.bringSubviewToFront(tabV)
         
         addChildViewController(ggvc)
+
         
     }
 
