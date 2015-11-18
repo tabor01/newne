@@ -7,17 +7,18 @@
 //
 
 import UIKit
-//let wid = UIScreen.mainScreen().bounds.width
-let rowHeight:CGFloat = 80
+
+let rowHeight:CGFloat = 180
+let collectionViewItemNumber = 3
+let reuseIdentifier = "cell"
 class GGTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.rowHeight = rowHeight
-        //        tableView.sectionHeaderHeight = 10
-        //        tableView.backgroundColor = UIColor.grayColor()
-        tableView.registerClass(GGTableViewCell.self, forCellReuseIdentifier: "cell")
+//        print(UIScreen.mainScreen().bounds)
+        tableView.registerClass(GGTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
     }
     
     
@@ -29,141 +30,191 @@ class GGTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! GGTableViewCell
-        cell.contentLable.text = "----第\(indexPath.row)行"
 
-        
-        cell.scrollView.contentSize = CGSize(width: view.bounds.width*3, height: cell.bounds.height)
-        for(var i = 1; i < 4; i++ ){
-            
-            let img = UIImageView()
-            img.image = UIImage(named: "\(i).jpg")
-            img.frame = CGRect(x: wid * (CGFloat(i-1)), y: 0, width: wid, height: rowHeight)
-            cell.scrollView.addSubview(img)
-            img.contentMode = UIViewContentMode.ScaleAspectFit
-        }
-        
+//        cell.collectView.contentSize = CGSize(width: wid * (CGFloat(collectionViewItemNumber)), height: 0)
+        cell.collectView.scrollEnabled = true
+
         cell.backgroundColor = UIColor.brownColor()
+//        print(cell.pageControl.frame)
         return cell
     }
     
     
 }
-
-//class GGTableViewCell: UITableViewCell{
-//    
-//    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-//        
-//        super.init(style: style, reuseIdentifier: reuseIdentifier)
-//        
-//        prepareUI()
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//    
-//    private func prepareUI(){
-//    
-//        addSubview(collectView)
-//        collectView.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        collectView.frame = contentView.bounds
-//        
-//    }
-//    
-//    //cell中用collectView来实现
-//    private lazy var collectView = UICollectionView()
-//}
-//
-//class GGCollectView: UICollectionView{
-//
-//    let layout = UICollectionViewLayout()
-//    let rect = CGRect(x: 0, y: 0, width: wid, height: rowHeight)
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//    init() {
-//        super.init(frame: CGRectZero, collectionViewLayout: layout)
-//    }
-//
-//
-//}
-//
-//class GGCollectViewCell:UICollectionViewCell{
-//
-//
-//}
-
-
+// MARK: - 自定义tableViewCell
 class GGTableViewCell: UITableViewCell{
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         prepareUI()
     }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
-    func prepareUI(){
+    private func prepareUI(){
+    
+        addSubview(collectView)
+        addSubview(pageControl)
         
-        contentView.addSubview(scrollView)
-        scrollView.addSubview(contentLable)
-        contentView.addSubview(pageControl)
-        
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        
-        contentLable.translatesAutoresizingMaskIntoConstraints = false
-        
+        collectView.translatesAutoresizingMaskIntoConstraints = false
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         
-        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[sv]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["sv" : scrollView]))
-        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[sv]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["sv" : scrollView]))
+        collectView.bounces = false
+        collectView.pagingEnabled = true
         
-        addConstraint(NSLayoutConstraint(item: pageControl, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: contentView, attribute: NSLayoutAttribute.Bottom, multiplier: 1, constant: -5))
+        let views = [
+        
+            "cv" : collectView,
+            "pc" : pageControl
+        
+        ]
+        
+        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[cv]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
+        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[cv]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
+        
+//        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[pc]-20-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
+        
         addConstraint(NSLayoutConstraint(item: pageControl, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: contentView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: pageControl, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: contentView, attribute: NSLayoutAttribute.Bottom, multiplier: 1, constant: -20))
         
+//        bringSubviewToFront(pageControl)
         
-        
+//        print(pageControl.frame)
+    }
+    
+    //cell中用collectView来实现
+    private lazy var collectView = GGCollectView()
+    
+    private lazy var pageControl: UIPageControl = {
+        let pc = UIPageControl()
+        pc.pageIndicatorTintColor = UIColor.grayColor()
+        pc.currentPageIndicatorTintColor = UIColor.greenColor()
+        pc.sizeToFit()
+//        pc.bounds.size = CGSize(width: 100, height: 20)
+//        pc.bounds = CGRect(x: 0, y: 0, width: 100, height: 20)
+        pc.numberOfPages = collectionViewItemNumber
+        return pc
+    }()
+}
+// MARK: - collectionView
+class GGCollectView: UICollectionView{
+
+
+    private var layout = GGCollectionViewFlowLayout()
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     
+    init() {
+        super.init(frame: CGRectZero, collectionViewLayout: layout)
+
+        dataSource = self
+        delegate = self
+        backgroundColor = UIColor.greenColor()
+        
+        registerClass(GGCollectViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+    }
+
+
+}
+
+extension GGCollectView: UICollectionViewDelegate{
+
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        let cell: GGTableViewCell = scrollView.superview as! GGTableViewCell
+//        cell.pageControl.
+        let widthCurrent = cell.collectView.contentOffset.x
+        
+                print(cell.collectView.contentOffset)
+                cell.pageControl.currentPage = NSInteger(widthCurrent / wid)
+    }
+
+}
+
+// MARK: - 数据源方法, 指定item的数量与Cell
+extension GGCollectView: UICollectionViewDataSource{
+
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return collectionViewItemNumber
+    }
     
-    lazy var contentLable:UILabel = {
-        let lbl = UILabel()
-        lbl.font = UIFont.systemFontOfSize(14)
-        lbl.sizeToFit()
-        return lbl
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! GGCollectViewCell
+        cell.img.image = nil
+        cell.backgroundColor = UIColor.randomColor()
+        cell.img.frame = CGRect(x: wid * (CGFloat(indexPath.item)), y: 0, width: wid, height: rowHeight)
+        cell.img.image = UIImage(named: "\(indexPath.item + 2)")
+        cell.img.contentMode = UIViewContentMode.ScaleAspectFit
+        cell.btn.setTitle("第\(indexPath.item)列", forState: UIControlState.Normal)
+
+        return cell
+    }
+}
+
+
+// MARK: - collection的Cell部分： 一张图片，一个按钮
+class GGCollectViewCell:UICollectionViewCell{
+    
+    var img: UIImageView = {
+        let img = UIImageView()
+        return img
     }()
-    lazy var scrollView: UIScrollView = {
-        let sv = UIScrollView()
-        sv.bounces = false
-        sv.showsHorizontalScrollIndicator = false
-        sv.pagingEnabled = true
-        sv.delegate = self
-        return sv
+    var btn: UIButton = {
+        let btn = UIButton()
+        btn.frame = CGRect(x: 0, y: 10, width: 100, height: 30)
+        return btn
     }()
-    lazy var pageControl: UIPageControl = {
-        let pc = UIPageControl()
-        pc.numberOfPages = 3
-        pc.pageIndicatorTintColor = UIColor.redColor()
-        pc.currentPageIndicatorTintColor = UIColor.greenColor()
-        pc.sizeToFit()
-        return pc
-    }()
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        prepareUI()
+    }
+    func prepareUI(){
+        addSubview(img)
+        img.addSubview(btn)
+    
+        img.translatesAutoresizingMaskIntoConstraints = false
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        
+        img.frame = contentView.frame
+        btn.center = img.center
+        
+        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[img]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["img" : img]))
+        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[img]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["img" : img]))
+        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-10-[btn]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["btn" : btn]))
+        addConstraint(NSLayoutConstraint(item: btn, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: img, attribute: NSLayoutAttribute.CenterY, multiplier: 1, constant: 0))
+
+    }
     
 }
 
-extension GGTableViewCell:UIScrollViewDelegate{
-    
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        
-        let offSet = scrollView.contentOffset.x
-        
-        pageControl.currentPage = NSInteger(offSet / contentView.bounds.width)
+class GGCollectionViewFlowLayout: UICollectionViewFlowLayout{
+
+    override init() {
+        super.init()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
-    
+    override func prepareLayout() {
+        super.prepareLayout()
+        itemSize = CGSize(width: wid, height: rowHeight)
+        scrollDirection = UICollectionViewScrollDirection.Horizontal
+        minimumInteritemSpacing = 0
+        minimumLineSpacing = 0
+    }
+
+   
 }

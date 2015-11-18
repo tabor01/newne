@@ -7,7 +7,7 @@
 //
 
 import UIKit
-let wid:CGFloat = 300
+let wid:CGFloat = UIScreen.mainScreen().bounds.width
 
 class ViewController: UIViewController {
 

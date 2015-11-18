@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		188489F21BFCA4A700DD8870 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188489F11BFCA4A700DD8870 /* UIColor+Extension.swift */; };
 		1895328A1BFB0CBE00F94D91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189532891BFB0CBE00F94D91 /* AppDelegate.swift */; };
 		1895328C1BFB0CBE00F94D91 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1895328B1BFB0CBE00F94D91 /* ViewController.swift */; };
 		1895328F1BFB0CBE00F94D91 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1895328D1BFB0CBE00F94D91 /* Main.storyboard */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		188489F11BFCA4A700DD8870 /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		189532861BFB0CBE00F94D91 /* Tab+scrow+coll.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tab+scrow+coll.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		189532891BFB0CBE00F94D91 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1895328B1BFB0CBE00F94D91 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 				189532891BFB0CBE00F94D91 /* AppDelegate.swift */,
 				1895328B1BFB0CBE00F94D91 /* ViewController.swift */,
 				1895329B1BFB0D8600F94D91 /* GGTableViewController.swift */,
+				188489F11BFCA4A700DD8870 /* UIColor+Extension.swift */,
 				1895328D1BFB0CBE00F94D91 /* Main.storyboard */,
 				189532901BFB0CBE00F94D91 /* Assets.xcassets */,
 				189532921BFB0CBE00F94D91 /* LaunchScreen.storyboard */,
@@ -142,6 +145,7 @@
 				1895328C1BFB0CBE00F94D91 /* ViewController.swift in Sources */,
 				1895329C1BFB0D8600F94D91 /* GGTableViewController.swift in Sources */,
 				1895328A1BFB0CBE00F94D91 /* AppDelegate.swift in Sources */,
+				188489F21BFCA4A700DD8870 /* UIColor+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +293,7 @@
 				1895329A1BFB0CBE00F94D91 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
